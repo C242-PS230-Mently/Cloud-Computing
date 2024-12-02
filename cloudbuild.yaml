@@ -39,7 +39,7 @@ steps:
       - '--set-secrets=DB_PASS=DB_PASS:latest'
       - '--set-secrets=DB_HOST=DB_HOST:latest'
       - '--set-secrets=MODEL_URL=MODEL_URL:latest'
-      - '--timeout=60s'
+      - '--timeout=90s'
       
 
 images:
