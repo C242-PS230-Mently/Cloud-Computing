@@ -27,7 +27,6 @@ steps:
       - '--region'
       - 'asia-southeast2'
       - '--allow-unauthenticated'
-      - '--set-secrets=PORT=PORT:latest'
       - '--set-secrets=JWT_SECRET=JWT_SECRET:latest'
       - '--set-secrets=JWT_RESET_SECRET=JWT_RESET_SECRET:latest'
       - '--set-secrets=EMAIL_USER=EMAIL_USER:latest'
