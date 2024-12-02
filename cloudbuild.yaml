@@ -11,7 +11,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'push'
-      - 'gcr.io/$PROJECT_ID/mently-apps:$COMMIT_SHA'
+      - 'gcr.io/$PROJECT_ID/mently-apps:latest'
 
   # Step 3: Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -21,7 +21,7 @@ steps:
       - 'deploy'
       - 'mently-api'
       - '--image'
-      - 'gcr.io/$PROJECT_ID/mently-apps:$COMMIT_SHA'
+      - 'gcr.io/$PROJECT_ID/mently-apps:latest'
       - '--platform'
       - 'managed'
       - '--region'
