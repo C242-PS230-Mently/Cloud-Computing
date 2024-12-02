@@ -7,7 +7,7 @@ steps:
       - 'gcr.io/$PROJECT_ID/mently-apps:$COMMIT_SHA'
       - '.'
 
-  # Step 2: Push the Docker image to Google Container Artifact
+  # Step 2: Push the Docker image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'push'
