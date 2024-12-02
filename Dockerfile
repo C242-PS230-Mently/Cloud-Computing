@@ -15,7 +15,7 @@ RUN npm install
 COPY . .
 
 # Expose the port that Cloud Run will use
-
+EXPOSE 8080
 
 # Start the application
 CMD [ "npm", "start" ]
