@@ -3,7 +3,8 @@ FROM node:20
 
 # Set the working directory in the container
 WORKDIR /app
-
+ENV PORT 8080
+ENV HOST 0.0.0.0
 # Copy package.json and package-lock.json to the container
 COPY package*.json ./
 
@@ -14,7 +15,7 @@ RUN npm install
 COPY . .
 
 # Expose the port that Cloud Run will use
-EXPOSE 8080
+
 
 # Start the application
 CMD [ "npm", "start" ]
