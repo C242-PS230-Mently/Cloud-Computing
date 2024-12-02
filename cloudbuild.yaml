@@ -6,14 +6,12 @@ steps:
       - '-t'
       - 'gcr.io/$PROJECT_ID/mently-apps:$COMMIT_SHA'
       - '.'
-    # logging option should be part of the step
 
   # Step 2: Push the Docker image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'push'
       - 'gcr.io/$PROJECT_ID/mently-apps:$COMMIT_SHA'
-    # logging option should be part of the step
 
   # Step 3: Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -42,8 +40,8 @@ steps:
       - '--set-secrets=DB_HOST=DB_HOST:latest'
       - '--set-secrets=MODEL_URL=MODEL_URL:latest'
 
-
 images:
   - 'gcr.io/$PROJECT_ID/mently-apps:$COMMIT_SHA'
-      options:
-      logging: CLOUD_LOGGING_ONLY
+
+options:
+  logging: CLOUD_LOGGING_ONLY
