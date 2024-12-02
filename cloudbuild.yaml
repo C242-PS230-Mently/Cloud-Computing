@@ -4,7 +4,7 @@ steps:
     args:
       - 'build'
       - '-t'
-      - 'gcr.io/$PROJECT_ID/mently-apps:$COMMIT_SHA'
+      - 'gcr.io/$PROJECT_ID/mently-apps:latest'
       - '.'
 
   # Step 2: Push the Docker image to Artifact Registry
