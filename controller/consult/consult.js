@@ -7,11 +7,11 @@ import moment from 'moment-timezone';
 dotenv.config();
 const Model_URL = process.env.MODEL_URL;
 console.log(Model_URL);
-const levelDescriptions = {
-    1: "Rendah",
-    2: "Sedang",
-    3: "Tinggi",
-};
+// const levelDescriptions = {
+//     1: "Rendah",
+//     2: "Sedang",
+//     3: "Tinggi",
+// };
 
 export const fetchApi = async (req, res) => {
     try {
@@ -26,9 +26,9 @@ export const fetchApi = async (req, res) => {
             Model_URL,
             payload, );
         
-        const processedPredictions = Object.fromEntries(
-            Object.entries(flaskResponse.data.predictions).map(([key, value]) => [key, levelDescriptions[value] || "Tidak diketahui"])
-        );
+        // const processedPredictions = Object.fromEntries(
+        //     Object.entries(flaskResponse.data.predictions).map(([key, value]) => [key, levelDescriptions[value] || "Tidak diketahui"])
+        // );
         const totalConsultations = await Consultation.count({ where: { user_id },distinct: true });
         const notificationMessage =await `Selamat atas konsultasi ke-${totalConsultations} kamu.Yuk Cek di sini untuk melihat detailnya.`;
         const totalConsult = await `Konsultasi ${totalConsultations}`;
@@ -36,7 +36,7 @@ export const fetchApi = async (req, res) => {
         const consultation = await Consultation.create({
 
             user_id,
-            predictions: processedPredictions,
+            predictions: flaskResponse.data.predictions,
             total_consult: totalConsult,
         });
         const createdAt = moment(consultation.created_at).tz('Asia/Singapore').format("YYYY-MM-DD HH:mm:ss");
@@ -57,7 +57,7 @@ export const fetchApi = async (req, res) => {
             username,
             Consult: totalConsult,
             message: flaskResponse.data.message,
-            predictions: processedPredictions,
+            predictions: flaskResponse.data.predictions,
             created_at: createdAt,
             statusCode: flaskResponse.data.statusCode,
         });
