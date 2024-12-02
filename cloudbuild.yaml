@@ -39,11 +39,11 @@ steps:
       - '--set-secrets=DB_PASS=DB_PASS:latest'
       - '--set-secrets=DB_HOST=DB_HOST:latest'
       - '--set-secrets=MODEL_URL=MODEL_URL:latest'
-      - '--timeout=250s'
+      - '--timeout=900s'
       
 
 images:
-  - 'gcr.io/$PROJECT_ID/mently-apps:$COMMIT_SHA'
+  - 'gcr.io/$PROJECT_ID/mently-apps:latest'
 
 options:
   logging: CLOUD_LOGGING_ONLY
