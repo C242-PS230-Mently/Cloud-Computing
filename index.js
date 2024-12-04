@@ -2,9 +2,9 @@ import express from "express";
 import router from "./routes/index.js";
 import dotenv from 'dotenv';
 import sequelize from "./config/database.js";
-import axios from 'axios';
+
 dotenv.config();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8000;
 
 
 const app = express();
@@ -22,6 +22,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(router);
 
-app.listen(PORT,() => {
+app.listen(PORT,'0.0.0.0',() => {
     console.log(`Server is running on PORT ${PORT}`)
 });

@@ -209,15 +209,20 @@ export const editProfile = async (req, res) => {
 
     const { full_name, email,username, gender, age } = req.body;
 
-    const existMail = await User.findOne({ where: { email } });
-    if (existMail) {
-        return res.status(400).json({ msg: 'Email is already exist' });
-    }
-    const existUser = await User.findOne({ where: { username } });
-    if (existUser) {
-        return res.status(400).json({ msg: 'Username is already exist' });
+    if (email && email !== user.email) {
+      const existMail = await User.findOne({ where: { email } });
+      if (existMail) {
+        return res.status(400).json({ msg: 'Email ini telah digunakan!' });
+      }
     }
 
+   
+    if (username && username !== user.username) {
+      const existUser = await User.findOne({ where: { username } });
+      if (existUser) {
+        return res.status(400).json({ msg: 'Username ini telah digunakan!' });
+      }
+    }
     const { error } = joiEdit.validate({ full_name, age,gender, email,username});
     if (error) return res.status(400).json({ msg: error.details[0].message });
 
@@ -272,10 +277,3 @@ export const changePassword = async (req,res) =>{
 }
 
 export const url='https://storage.googleapis.com/mently-bucket/gif/twittervid.com_hamukukka_123938.gif';
-
-
-
-
-
-
-
