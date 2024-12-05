@@ -1,19 +1,14 @@
 steps:
-  - name: 'gcr.io/cloud-builders/gcloud'
-    args:
-      - 'secrets'
-      - 'versions'
-      - 'access'
-      - 'latest'
-      - '--secret=GOOGLE_APPLICATION_CREDENTIALS'
-    id: 'Fetch API key from Secret Manager'
-
-  - name: 'gcr.io/cloud-builders/gcloud'
+    - name: 'gcr.io/cloud-builders/gcloud'
+    id: 'Fetch credentials from Secret Manager'
     entrypoint: 'bash'
     args:
       - '-c'
-      - 'export GOOGLE_APPLICATION_CREDENTIALS="/workspace/service_account.json"'
-    id: 'Set GOOGLE_APPLICATION_CREDENTIALS environment variable'
+      - |
+        echo "Fetching service account credentials from Secret Manager..."
+        gcloud secrets versions access latest --secret="my-service-account-credentials" > /workspace/service_account.json
+        export GOOGLE_APPLICATION_CREDENTIALS="/workspace/service_account.json"
+        echo "Credentials fetched successfully."
   # Step 1: Build Docker image
   - name: 'gcr.io/cloud-builders/docker'
     args:
