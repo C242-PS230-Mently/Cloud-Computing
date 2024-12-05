@@ -19,6 +19,7 @@ export const fetchApi = async (req, res) => {
         const user_id = req.user.id;
         
         const { username } = req.user;
+        
         const payload = req.body;
      
 
@@ -35,7 +36,7 @@ export const fetchApi = async (req, res) => {
         const totalConsult = await `Konsultasi ${startFrom1}`;
         
         const consultation = await Consultation.create({
-
+            
             user_id,
             predictions: flaskResponse.data.predictions,
             total_consult: totalConsult,
@@ -53,7 +54,7 @@ export const fetchApi = async (req, res) => {
         });
 
         res.status(200).json({
-            
+            id: consultation.id,
             user_id,
             username,
             Consult: totalConsult,
