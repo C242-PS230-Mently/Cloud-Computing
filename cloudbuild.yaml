@@ -1,26 +1,4 @@
-steps:
-  - name: 'gcr.io/cloud-builders/gcloud'
-    id: 'Fetch credentials from Secret Manager'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        echo "Fetching service account credentials from Secret Manager..."
-        gcloud secrets versions access latest --secret="my-service-account-credentials" > /workspace/service_account.json
-        echo "Credentials fetched successfully."
-
-  - name: 'gcr.io/cloud-builders/gcloud'
-    id: 'Use credentials for gcloud commands'
-    env:
-      - 'GOOGLE_APPLICATION_CREDENTIALS=/workspace/service_account.json'  # Set environment variable directly here
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        echo "Using service account credentials for gcloud command"
-        gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
-        # Add any gcloud command that needs authentication here
-
+steps:z
   # Step 1: Build Docker image
   - name: 'gcr.io/cloud-builders/docker'
     args:
@@ -53,6 +31,7 @@ steps:
       - '--set-secrets=JWT_RESET_SECRET=JWT_RESET_SECRET:latest'
       - '--set-secrets=EMAIL_USER=EMAIL_USER:latest'
       - '--set-secrets=EMAIL_PASS=EMAIL_PASS:latest'
+      - '--set-secrets=GOOGLE_APPLICATION_CREDENTIALS=my-service-account-credentials:latest'
       - '--set-secrets=GCLOUD_PROJECT=GCLOUD_PROJECT:latest'
       - '--set-secrets=GCLOUD_BUCKET=GCLOUD_BUCKET:latest'
       - '--set-secrets=DB_NAME=DB_NAME:latest'
@@ -61,6 +40,7 @@ steps:
       - '--set-secrets=DB_HOST=DB_HOST:latest'
       - '--set-secrets=MODEL_URL=MODEL_URL:latest'
       - '--timeout=900s'
+      
 
 images:
   - 'gcr.io/$PROJECT_ID/mently-apps:latest'
