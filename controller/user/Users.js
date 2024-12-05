@@ -105,7 +105,7 @@ const upload = multer({ storage: multerStorage,
  });
 
  const initializeStorage = async() => {
-  const serviceAccount = getServiceAccountKey();
+  const serviceAccount = await getServiceAccountKey();
   const storage = new Storage({
     projectId: process.env.GCLOUD_PROJECT,
     credentials: serviceAccount, 
