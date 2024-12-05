@@ -120,7 +120,7 @@ const upload = multer({ storage: multerStorage,
 
 export const updatePhoto = async (req, res) => {
   upload.single('file')(req, res, async (err) => {
-    const { bucket } = initializeStorage();
+    const { bucket } = await initializeStorage();
     // Penanganan error jika ukuran file terlalu besar
     if (err) {
       if (err.code === 'LIMIT_FILE_SIZE') {
