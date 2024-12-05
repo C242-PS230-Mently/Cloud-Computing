@@ -113,7 +113,7 @@ const bucket = storage.bucket(process.env.GCLOUD_BUCKET);
 
 export const updatePhoto = async (req, res) => {
   upload.single('file')(req, res, async (err) => {
-    // Penanganan error jika ukuran file terlalu besar
+   
     if (err) {
       if (err.code === 'LIMIT_FILE_SIZE') {
         return res.status(400).send({
@@ -123,17 +123,17 @@ export const updatePhoto = async (req, res) => {
       return res.status(500).send({ error: err.message });
     }
 
-    // Pastikan hanya ada satu file yang diupload
+    
     if (!req.file) {
       return res.status(400).send({
-        error: 'Tidak ada file yang diupload. Pastikan file disertakan.',
+        error: 'Tidak ada file yang diupload.',
       });
     }
 
     // Jika ada lebih dari satu file yang dikirimkan, akan menghasilkan error
     if (req.files) {
       return res.status(400).send({
-        error: 'Hanya diperbolehkan mengupload satu file. Pastikan hanya satu file yang dipilih.',
+        error: 'Pastikan hanya satu file yang dipilih.',
       });
     }
 
