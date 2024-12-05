@@ -104,13 +104,14 @@ const upload = multer({ storage: multerStorage,
           limits: {fileSize: limitPhoto}
  });
 
- const initializeStorage = async() => {
-  const serviceAccount = await getServiceAccountKey();
+ async function initializeStorage() {
+  const serviceAccount = getServiceAccountKey();
   const storage = new Storage({
     projectId: process.env.GCLOUD_PROJECT,
-    credentials: serviceAccount, 
+    credentials: await serviceAccount, 
+    
   });
-
+  console.log(serviceAccount);
   const bucket = storage.bucket(process.env.GCLOUD_BUCKET);
 
   
@@ -121,6 +122,7 @@ const upload = multer({ storage: multerStorage,
 export const updatePhoto = async (req, res) => {
   upload.single('file')(req, res, async (err) => {
     const { bucket } = await initializeStorage();
+
     // Penanganan error jika ukuran file terlalu besar
     if (err) {
       if (err.code === 'LIMIT_FILE_SIZE') {
@@ -186,9 +188,6 @@ export const updatePhoto = async (req, res) => {
     }
   });
 };
-
-
-
 
 
 export const getprofileById = async (req, res) => {
