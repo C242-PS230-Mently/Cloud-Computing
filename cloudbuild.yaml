@@ -12,7 +12,7 @@ steps:
   - name: 'gcr.io/cloud-builders/gcloud'
     id: 'Use credentials for gcloud commands'
     env:
-      - 'GOOGLE_APPLICATION_CREDENTIALS=/workspace/service_account.json'
+      - 'GOOGLE_APPLICATION_CREDENTIALS=/workspace/service_account.json'  # Set environment variable directly here
     entrypoint: 'bash'
     args:
       - '-c'
@@ -20,6 +20,7 @@ steps:
         echo "Using service account credentials for gcloud command"
         gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
         # Add any gcloud command that needs authentication here
+
 
   # Step 1: Build Docker image
   - name: 'gcr.io/cloud-builders/docker'
