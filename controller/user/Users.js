@@ -5,6 +5,7 @@ import { Storage } from '@google-cloud/storage';
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
 import { editPass, joiEdit } from "../auth/validator.js";
+import { getServiceAccountKey } from "../auth/secret.js";
 
 
 
@@ -103,16 +104,24 @@ const upload = multer({ storage: multerStorage,
           limits: {fileSize: limitPhoto}
  });
 
-const storage = new Storage({
-  projectId: process.env.GCLOUD_PROJECT,
-  keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS,
-});
-const bucket = storage.bucket(process.env.GCLOUD_BUCKET);
+ async function initializeStorage() {
+  const serviceAccount = getServiceAccountKey();
+  const storage = new Storage({
+    projectId: process.env.GCLOUD_PROJECT,
+    credentials: await serviceAccount, // assuming this is async
+  });
 
+  const bucket = storage.bucket(process.env.GCLOUD_BUCKET);
+
+  // You can now perform other async operations like uploading or downloading files
+  return { storage, bucket };
+}
 
 
 export const updatePhoto = async (req, res) => {
   upload.single('file')(req, res, async (err) => {
+    const { bucket } = await initializeStorage();
+
     // Penanganan error jika ukuran file terlalu besar
     if (err) {
       if (err.code === 'LIMIT_FILE_SIZE') {
