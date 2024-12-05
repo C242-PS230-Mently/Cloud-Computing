@@ -122,7 +122,7 @@ export const updatePhoto = async (req, res) => {
   upload.single('file')(req, res, async (err) => {
     const { bucket } = await initializeStorage();
 
-    
+    // Handle file size limit error
     if (err) {
       if (err.code === 'LIMIT_FILE_SIZE') {
         return res.status(400).send({
@@ -132,14 +132,14 @@ export const updatePhoto = async (req, res) => {
       return res.status(500).send({ error: err.message });
     }
 
- 
+    // Ensure a file is uploaded
     if (!req.file) {
       return res.status(400).send({
         error: 'Tidak ada file yang diupload. Pastikan file disertakan.',
       });
     }
 
-    
+    // Check if more than one file is uploaded
     if (req.files) {
       return res.status(400).send({
         error: 'Hanya diperbolehkan mengupload satu file. Pastikan hanya satu file yang dipilih.',
@@ -156,14 +156,14 @@ export const updatePhoto = async (req, res) => {
         contentType: req.file.mimetype,
       });
 
-     
+      // Log when the stream starts
       console.log('Stream started');
       
       blobStream.on('finish', async () => {
         console.log('Stream finished');
         const publicUrl = `https://storage.googleapis.com/${process.env.GCLOUD_BUCKET}/${blob.name}`;
 
-        
+        // Update the user profile with the uploaded image URL
         await User.update(
           { profile_photo: publicUrl },
           { where: { id: userId } }
@@ -180,7 +180,15 @@ export const updatePhoto = async (req, res) => {
         res.status(500).send({ error: err.message });
       });
 
-    
+      // Check if the file buffer exists before ending the stream
+      if (!req.file.buffer) {
+        return res.status(400).send({ error: 'File buffer is missing.' });
+      }
+
+      // Log the file buffer
+      console.log('File buffer length:', req.file.buffer.length);
+
+      // Write to the stream and end it
       console.log('Ending the stream');
       blobStream.end(req.file.buffer);  
     } catch (err) {
@@ -189,6 +197,7 @@ export const updatePhoto = async (req, res) => {
     }
   });
 };
+
 
 
 
