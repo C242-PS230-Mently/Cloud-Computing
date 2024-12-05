@@ -103,10 +103,10 @@ const multerStorage = multer.memoryStorage();
 const upload = multer({ storage: multerStorage,
           limits: {fileSize: limitPhoto}
  });
-
+const credentialsNew = await accessSecretVersion(projectId, secretId, versionId);
  const storage = new Storage({
   projectId: process.env.GCLOUD_PROJECT,
-  keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS,
+  credentials: credentialsNew,
 });
 const bucket = storage.bucket(process.env.GCLOUD_BUCKET);
 
