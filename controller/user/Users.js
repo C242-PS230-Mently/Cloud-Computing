@@ -104,7 +104,7 @@ const upload = multer({ storage: multerStorage,
           limits: {fileSize: limitPhoto}
  });
 
- async function initializeStorage() {
+ const initializeStorage = async() => {
   const serviceAccount = getServiceAccountKey();
   const storage = new Storage({
     projectId: process.env.GCLOUD_PROJECT,
@@ -120,9 +120,8 @@ const upload = multer({ storage: multerStorage,
 
 export const updatePhoto = async (req, res) => {
   upload.single('file')(req, res, async (err) => {
-    const { bucket } = await initializeStorage();
-
-    // Handle file size limit error
+    const { bucket } = initializeStorage();
+    // Penanganan error jika ukuran file terlalu besar
     if (err) {
       if (err.code === 'LIMIT_FILE_SIZE') {
         return res.status(400).send({
@@ -132,14 +131,14 @@ export const updatePhoto = async (req, res) => {
       return res.status(500).send({ error: err.message });
     }
 
-    // Ensure a file is uploaded
+    // Pastikan hanya ada satu file yang diupload
     if (!req.file) {
       return res.status(400).send({
         error: 'Tidak ada file yang diupload. Pastikan file disertakan.',
       });
     }
 
-    // Check if more than one file is uploaded
+    // Jika ada lebih dari satu file yang dikirimkan, akan menghasilkan error
     if (req.files) {
       return res.status(400).send({
         error: 'Hanya diperbolehkan mengupload satu file. Pastikan hanya satu file yang dipilih.',
@@ -149,6 +148,13 @@ export const updatePhoto = async (req, res) => {
     const user = req.user;  
     const userId = user.id;  
 
+    // Jika userId tidak ditemukan
+    // if (!userId) {
+    //   return res.status(400).send({
+    //     error: 'ID pengguna tidak ditemukan. Pastikan pengguna sudah terautentikasi.',
+    //   });
+    // }
+
     try {
       const blob = bucket.file(`userProfile/${userId}-profile-pic-${Date.now()}`);
       const blobStream = blob.createWriteStream({
@@ -156,14 +162,9 @@ export const updatePhoto = async (req, res) => {
         contentType: req.file.mimetype,
       });
 
-      // Log when the stream starts
-      console.log('Stream started');
-      
       blobStream.on('finish', async () => {
-        console.log('Stream finished');
         const publicUrl = `https://storage.googleapis.com/${process.env.GCLOUD_BUCKET}/${blob.name}`;
 
-        // Update the user profile with the uploaded image URL
         await User.update(
           { profile_photo: publicUrl },
           { where: { id: userId } }
@@ -176,23 +177,11 @@ export const updatePhoto = async (req, res) => {
       });
 
       blobStream.on('error', (err) => {
-        console.error('Stream error:', err);  
         res.status(500).send({ error: err.message });
       });
 
-      // Check if the file buffer exists before ending the stream
-      if (!req.file.buffer) {
-        return res.status(400).send({ error: 'File buffer is missing.' });
-      }
-
-      // Log the file buffer
-      console.log('File buffer length:', req.file.buffer.length);
-
-      // Write to the stream and end it
-      console.log('Ending the stream');
-      blobStream.end(req.file.buffer);  
+      blobStream.end(req.file.buffer);
     } catch (err) {
-      console.error('Error uploading file:', err);   
       res.status(500).send({ error: err.message });
     }
   });
