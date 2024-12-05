@@ -139,22 +139,8 @@ export const updatePhoto = async (req, res) => {
       });
     }
 
-    // Jika ada lebih dari satu file yang dikirimkan, akan menghasilkan error
-    if (req.files) {
-      return res.status(400).send({
-        error: 'Hanya diperbolehkan mengupload satu file. Pastikan hanya satu file yang dipilih.',
-      });
-    }
-
     const user = req.user;  
     const userId = user.id;  
-
-    // Jika userId tidak ditemukan
-    // if (!userId) {
-    //   return res.status(400).send({
-    //     error: 'ID pengguna tidak ditemukan. Pastikan pengguna sudah terautentikasi.',
-    //   });
-    // }
 
     try {
       const blob = bucket.file(`userProfile/${userId}-profile-pic-${Date.now()}`);
@@ -164,6 +150,7 @@ export const updatePhoto = async (req, res) => {
       });
 
       blobStream.on('finish', async () => {
+        console.log('Stream finished');
         const publicUrl = `https://storage.googleapis.com/${process.env.GCLOUD_BUCKET}/${blob.name}`;
 
         await User.update(
@@ -178,15 +165,19 @@ export const updatePhoto = async (req, res) => {
       });
 
       blobStream.on('error', (err) => {
+        console.error('Stream error:', err);  // Log error
         res.status(500).send({ error: err.message });
       });
 
-      blobStream.end(req.file.buffer);
+      console.log('Starting the stream');
+      blobStream.end(req.file.buffer);  // Ensure this is called after file is ready
     } catch (err) {
+      console.error('Error uploading file:', err);  // Log error
       res.status(500).send({ error: err.message });
     }
   });
 };
+
 
 
 export const getprofileById = async (req, res) => {
