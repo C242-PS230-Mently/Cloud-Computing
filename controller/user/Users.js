@@ -5,7 +5,6 @@ import { Storage } from '@google-cloud/storage';
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
 import { editPass, joiEdit } from "../auth/validator.js";
-import { getServiceAccountKey } from "../auth/secret.js";
 
 
 
@@ -103,10 +102,10 @@ const multerStorage = multer.memoryStorage();
 const upload = multer({ storage: multerStorage,
           limits: {fileSize: limitPhoto}
  });
-const credentialsNew = await accessSecretVersion(projectId, secretId, versionId);
+
  const storage = new Storage({
   projectId: process.env.GCLOUD_PROJECT,
-  credentials: credentialsNew,
+  credentials: process.env.GOOGLE_APPLICATION_CREDENTIALS,
 });
 const bucket = storage.bucket(process.env.GCLOUD_BUCKET);
 

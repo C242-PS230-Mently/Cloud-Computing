@@ -31,7 +31,7 @@ steps:
       - '--set-secrets=JWT_RESET_SECRET=JWT_RESET_SECRET:latest'
       - '--set-secrets=EMAIL_USER=EMAIL_USER:latest'
       - '--set-secrets=EMAIL_PASS=EMAIL_PASS:latest'
-      - '--set-secrets=GOOGLE_APPLICATION_CREDENTIALS=my-service-account-credentials:latest'
+      - '--set-secrets=GOOGLE_APPLICATION_CREDENTIALS=GOOGLE_APPLICATION_CREDENTIALS:latest'
       - '--set-secrets=GCLOUD_PROJECT=GCLOUD_PROJECT:latest'
       - '--set-secrets=GCLOUD_BUCKET=GCLOUD_BUCKET:latest'
       - '--set-secrets=DB_NAME=DB_NAME:latest'
