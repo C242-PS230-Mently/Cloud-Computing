@@ -122,7 +122,7 @@ export const updatePhoto = async (req, res) => {
   upload.single('file')(req, res, async (err) => {
     const { bucket } = await initializeStorage();
 
-    // Penanganan error jika ukuran file terlalu besar
+    
     if (err) {
       if (err.code === 'LIMIT_FILE_SIZE') {
         return res.status(400).send({
@@ -132,10 +132,17 @@ export const updatePhoto = async (req, res) => {
       return res.status(500).send({ error: err.message });
     }
 
-    // Pastikan hanya ada satu file yang diupload
+ 
     if (!req.file) {
       return res.status(400).send({
         error: 'Tidak ada file yang diupload. Pastikan file disertakan.',
+      });
+    }
+
+    
+    if (req.files) {
+      return res.status(400).send({
+        error: 'Hanya diperbolehkan mengupload satu file. Pastikan hanya satu file yang dipilih.',
       });
     }
 
@@ -149,10 +156,14 @@ export const updatePhoto = async (req, res) => {
         contentType: req.file.mimetype,
       });
 
+     
+      console.log('Stream started');
+      
       blobStream.on('finish', async () => {
         console.log('Stream finished');
         const publicUrl = `https://storage.googleapis.com/${process.env.GCLOUD_BUCKET}/${blob.name}`;
 
+        
         await User.update(
           { profile_photo: publicUrl },
           { where: { id: userId } }
@@ -165,18 +176,20 @@ export const updatePhoto = async (req, res) => {
       });
 
       blobStream.on('error', (err) => {
-        console.error('Stream error:', err);  // Log error
+        console.error('Stream error:', err);  
         res.status(500).send({ error: err.message });
       });
 
-      console.log('Starting the stream');
-      blobStream.end(req.file.buffer);  // Ensure this is called after file is ready
+    
+      console.log('Ending the stream');
+      blobStream.end(req.file.buffer);  
     } catch (err) {
-      console.error('Error uploading file:', err);  // Log error
+      console.error('Error uploading file:', err);   
       res.status(500).send({ error: err.message });
     }
   });
 };
+
 
 
 
