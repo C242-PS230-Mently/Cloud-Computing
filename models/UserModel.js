@@ -48,25 +48,7 @@ export const Question = sequelize.define("Question", {
 });
 
 
-export const UserResponse = sequelize.define("UserResponse", {
-    response_id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    user_id: { type: DataTypes.STRING, allowNull: false },
-    question_id: { type: DataTypes.INTEGER, allowNull: false },
-    option_id: { type: DataTypes.INTEGER, allowNull: false },
-    createdAt: { type: DataTypes.DATE, defaultValue: Sequelize.NOW },
-}, {
-    tableName: "User_response",
-});
 
-export const UserHistory = sequelize.define("UserHistory", {
-    history_id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    response_id: { type: DataTypes.INTEGER, allowNull: false },
-    model_result: { type: DataTypes.JSON },
-    label: { type: DataTypes.STRING },
-    createdAt: { type: DataTypes.DATE, defaultValue: Sequelize.NOW },
-}, {
-    tableName: "user_history",
-});
 
 // model dasboard
 export const Article = sequelize.define('Article', {
@@ -105,17 +87,5 @@ export const Consultation = sequelize.define('Consultation', {
 User.hasMany(UserNotif, { foreignKey: { name: "user_id", allowNull: false }, onDelete: "CASCADE", onUpdate: "CASCADE" });
 UserNotif.belongsTo(User, { foreignKey: { name: "user_id", allowNull: false }, onDelete: "CASCADE", onUpdate: "CASCADE" });
 
-User.hasMany(UserResponse, { foreignKey: { name: "user_id", allowNull: false }, onDelete: "CASCADE", onUpdate: "CASCADE" });
-UserResponse.belongsTo(User, { foreignKey: { name: "user_id", allowNull: false }, onDelete: "CASCADE", onUpdate: "CASCADE" });
-
-Question.hasMany(UserResponse, { foreignKey: { name: "question_id", allowNull: false }, onDelete: "CASCADE", onUpdate: "CASCADE" });
-UserResponse.belongsTo(Question, { foreignKey: { name: "question_id", allowNull: false }, onDelete: "CASCADE", onUpdate: "CASCADE" });
-
 User.hasOne(UserOtp, { foreignKey: { name: "email", allowNull: false }, sourceKey: "email", onDelete: "CASCADE", onUpdate: "CASCADE" });
-UserOtp.belongsTo(User, { foreignKey: { name: "email", allowNull: false }, targetKey: "email", onDelete: "CASCADE", onUpdate: "CASCADE" });
-
-UserResponse.hasMany(UserHistory, { foreignKey: { name: "response_id", allowNull: false }, onDelete: "CASCADE", onUpdate: "CASCADE" });
-UserHistory.belongsTo(UserResponse, { foreignKey: { name: "response_id", allowNull: false }, onDelete: "CASCADE", onUpdate: "CASCADE" });
-
-UserHistory.hasMany(UserNotif, { foreignKey: { name: "history_id", allowNull: true }, onDelete: "SET NULL", onUpdate: "CASCADE" });
-UserNotif.belongsTo(UserHistory, { foreignKey: { name: "history_id", allowNull: true }, onDelete: "SET NULL", onUpdate: "CASCADE" });
+UserOtp.belongsTo(User, { foreignKey: { name: "email", allowNull: false }, targetKey: "email", onDelete: "CASCADE", onUpdate: "CASCADE" });
