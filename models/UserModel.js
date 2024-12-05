@@ -85,8 +85,10 @@ export const Doctor = sequelize.define('Doctor', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true, allowNull: false },
   name: { type: DataTypes.STRING(100), allowNull: false },
   specialization: { type: DataTypes.STRING(100), allowNull: false },
-  image_url: { type: DataTypes.STRING(255), allowNull: false },
   location: { type: DataTypes.STRING(150), allowNull: false },
+  hospital: { type: DataTypes.STRING(100), allowNull: false },
+  contact: { type: DataTypes.STRING(20), allowNull: false },
+  image_url: { type: DataTypes.STRING(255), allowNull: false },
   created_at: { type: DataTypes.DATE, defaultValue: Sequelize.NOW, allowNull: true }
 }, { tableName: 'doctors', timestamps: false });
 

@@ -3,13 +3,14 @@ import { Doctor } from '../../models/UserModel.js';
 // CREATE: Menambahkan dokter baru
 export const createDoctor = async (req, res) => {
     try {
-        const { name, specialization, contact, location, image_url } = req.body;
+        const { name, specialization, hospital, location, image_url, contact } = req.body;
         const newDoctor = await Doctor.create({
             name,
             specialization,
-            contact,
             location,
-            image_url
+            hospital,
+            image_url,
+            contact,
         });
 
         res.status(201).json({
