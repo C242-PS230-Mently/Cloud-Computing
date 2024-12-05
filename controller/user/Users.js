@@ -108,12 +108,12 @@ const upload = multer({ storage: multerStorage,
   const serviceAccount = getServiceAccountKey();
   const storage = new Storage({
     projectId: process.env.GCLOUD_PROJECT,
-    credentials: await serviceAccount, // assuming this is async
+    credentials: serviceAccount, 
   });
 
   const bucket = storage.bucket(process.env.GCLOUD_BUCKET);
 
-  // You can now perform other async operations like uploading or downloading files
+  
   return { storage, bucket };
 }
 
