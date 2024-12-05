@@ -1,5 +1,5 @@
 steps:
-    - name: 'gcr.io/cloud-builders/gcloud'
+  - name: 'gcr.io/cloud-builders/gcloud'
     id: 'Fetch credentials from Secret Manager'
     entrypoint: 'bash'
     args:
@@ -7,8 +7,20 @@ steps:
       - |
         echo "Fetching service account credentials from Secret Manager..."
         gcloud secrets versions access latest --secret="my-service-account-credentials" > /workspace/service_account.json
-        export GOOGLE_APPLICATION_CREDENTIALS="/workspace/service_account.json"
         echo "Credentials fetched successfully."
+
+  - name: 'gcr.io/cloud-builders/gcloud'
+    id: 'Use credentials for gcloud commands'
+    env:
+      - 'GOOGLE_APPLICATION_CREDENTIALS=/workspace/service_account.json'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "Using service account credentials for gcloud command"
+        gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
+        # Add any gcloud command that needs authentication here
+
   # Step 1: Build Docker image
   - name: 'gcr.io/cloud-builders/docker'
     args:
