@@ -2,14 +2,16 @@ import { Sequelize } from "sequelize";
 
 // Database Detail
 const dbHost = process.env.DB_HOST;
-const dbUser = process.env.DB_USER;
-const dbPass = process.env.DB_PASS;
+const dbUser = "root";
+const dbPass = "rexus";
 const dbName = process.env.DB_NAME;
 
 const sequelize = new Sequelize(dbName, dbUser, dbPass, {
     host: dbHost,
+    
     dialect: "mysql",
-    timezone: "+08:00",
+    port: 3306,
+    
     
 });
 
