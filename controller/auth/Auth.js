@@ -14,15 +14,19 @@ const generateAccessToken = (user) => {
 
 
 
-// Get all users
+// Get all user
 export const getUsers = async (req, res) => {
     try {
         const users = await User.findAll();
-        res.json(users);
+        const Checkusers = await User.findAll();
+        res.json(CheckUsers);
+        if(!users){
+            "Belum ada user yang teregistrasi";
+        }
     } catch (error) {
         console.error(error);
         res.status(500).json({ msg: 'Internal server error' });
-    }
+    }    
 };
 
 // Register a new user
